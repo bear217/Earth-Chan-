@@ -1,28 +1,3 @@
-from flask import Flask
-from threading import Thread
-import random
-
-
-app = Flask('')
-
-@app.route('/')
-def home():
-	return 'Im in!'
-
-def run():
-  app.run(
-		host='0.0.0.0',
-		port=random.randint(2000,9000)
-	)
-
-def keep_alive():
-	'''
-	Creates and starts new thread that runs the function run.
-	'''
-	t = Thread(target=run)
-	t.start()
-
-
 
 import asyncio
 import functools
@@ -525,7 +500,6 @@ class Music(commands.Cog):
             if ctx.voice_client.channel != ctx.author.voice.channel:
                 raise commands.CommandError('I\'m somewhere else already!')
 
-
 bot = commands.Bot(command_prefix=['W.','w.','world.','World.','Wrld.','wrld.'], description='hi! I\'m WorldChan! I play music for people around the world to enjoy ^-^')
 bot.add_cog(Music(bot))
 
@@ -534,8 +508,37 @@ bot.add_cog(Music(bot))
 @bot.event
 async def on_ready():
     print('Logged in as:\n{0.user.name}\n{0.user.id}'.format(bot))
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Any song you want!"))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="songs using w.help!"))
     print('Connected to bot: {}'.format(bot.user.name))
     print('Bot ID: {}'.format(bot.user.id))
 bot.run(os.getenv("TOKEN"))
+
+from flask import Flask
+from threading import Thread
+import random
+
+
+app = Flask('')
+
+@app.route('/')
+def home():
+	return 'Im in!'
+
+def run():
+  app.run(
+		host='0.0.0.0',
+		port=random.randint(2000,9000)
+	)
+
+def keep_alive():
+	'''
+	Creates and starts new thread that runs the function run.
+	'''
+	t = Thread(target=run)
+	t.start()
+app.run(debug=True, port='3000', host='0.0.0.0')
+
+app.run(debug=True, port='3000', host='0.0.0.0')
+
+
 
