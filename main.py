@@ -1,3 +1,29 @@
+from flask import Flask
+from threading import Thread
+import random
+
+
+app = Flask('')
+
+@app.route('/')
+def home():
+	return 'Im in!'
+
+def run():
+  app.run(
+		host='0.0.0.0',
+		port=random.randint(2000,9000)
+	)
+
+def keep_alive():
+	'''
+	Creates and starts new thread that runs the function run.
+	'''
+	t = Thread(target=run)
+	t.start()
+
+
+
 import asyncio
 import functools
 import itertools
@@ -9,6 +35,8 @@ import youtube_dl
 
 from async_timeout import timeout
 from discord.ext import commands
+
+
 
 # Silence useless bug reports messages
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -502,10 +530,12 @@ bot = commands.Bot(command_prefix=['W.','w.','world.','World.','Wrld.','wrld.'],
 bot.add_cog(Music(bot))
 
 
+
 @bot.event
 async def on_ready():
     print('Logged in as:\n{0.user.name}\n{0.user.id}'.format(bot))
-    await bot.change_presence(activity=discord.Game('my music using w.help'))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Any song you want!"))
     print('Connected to bot: {}'.format(bot.user.name))
     print('Bot ID: {}'.format(bot.user.id))
 bot.run(os.getenv("TOKEN"))
+
