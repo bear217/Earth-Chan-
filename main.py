@@ -1,4 +1,3 @@
-
 import asyncio
 import functools
 import itertools
@@ -11,12 +10,11 @@ import youtube_dl
 from keep_alive import keep_alive
 from async_timeout import timeout
 from discord.ext import commands
-keep_alive()
 
+keep_alive()
 
 # Silence useless bug reports messages
 youtube_dl.utils.bug_reports_message = lambda: ''
-
 
 
 class VoiceError(Exception):
@@ -25,6 +23,7 @@ class VoiceError(Exception):
 
 class YTDLError(Exception):
     pass
+
 
 class YTDLSource(discord.PCMVolumeTransformer):
     YTDL_OPTIONS = {
@@ -258,6 +257,7 @@ class VoiceState:
             await self.voice.disconnect()
             self.voice = None
 
+
 class Music(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -289,7 +289,7 @@ class Music(commands.Cog):
 
     @commands.command(name='join', invoke_without_subcommand=True)
     async def _join(self, ctx: commands.Context):
-        
+
         """Joins a voice channel."""
 
         destination = ctx.author.voice.channel
@@ -299,7 +299,7 @@ class Music(commands.Cog):
 
         ctx.voice_state.voice = await destination.connect()
 
-    @commands.command(name='summon', aliases=['here','this room', 'move'])
+    @commands.command(name='summon', aliases=['here', 'this room', 'move'])
     @commands.has_permissions(manage_guild=True)
     async def _summon(self, ctx: commands.Context, *, channel: discord.VoiceChannel = None):
         """Summons the bot to a voice channel.
@@ -317,7 +317,7 @@ class Music(commands.Cog):
 
         ctx.voice_state.voice = await destination.connect()
 
-    @commands.command(name='leave', aliases=['disconnect','frickoff','dc',])
+    @commands.command(name='leave', aliases=['disconnect', 'frickoff', 'dc', ])
     @commands.has_permissions(manage_guild=True)
     async def _leave(self, ctx: commands.Context):
         """Clears the queue and leaves the voice channel."""
@@ -338,10 +338,10 @@ class Music(commands.Cog):
         if 0 > volume > 100:
             return await ctx.send('Volume must be between 0 and 100 you goof')
 
-        ctx.voice_state.volume = volume / 100
+        ctx.voice_client.source.volume = volume / 100
         await ctx.send('Volume of my speakers set to {}%!'.format(volume))
 
-    @commands.command(name='now', aliases=['current', 'playing','np'])
+    @commands.command(name='now', aliases=['current', 'playing', 'np'])
     async def _now(self, ctx: commands.Context):
         """Displays the currently playing song."""
 
@@ -376,7 +376,7 @@ class Music(commands.Cog):
             ctx.voice_state.voice.stop()
             await ctx.message.add_reaction('⏹')
 
-    @commands.command(name='skip' , aliases=['s','jump','hop'])
+    @commands.command(name='skip', aliases=['s', 'jump', 'hop'])
     async def _skip(self, ctx: commands.Context):
         """Vote to skip a song. The requester can automatically skip.
         3 skip votes are needed for the song to be skipped.
@@ -436,7 +436,7 @@ class Music(commands.Cog):
         ctx.voice_state.songs.shuffle()
         await ctx.message.add_reaction('✅')
 
-    @commands.command(name='remove', aliases=['delete','kill','R',])
+    @commands.command(name='remove', aliases=['delete', 'kill', 'R', ])
     async def _remove(self, ctx: commands.Context, index: int):
         """Removes a song from the queue at a given index."""
 
@@ -446,7 +446,7 @@ class Music(commands.Cog):
         ctx.voice_state.songs.remove(index - 1)
         await ctx.message.add_reaction('✅')
 
-    @commands.command(name='loop', aliases=['repeat', 'l','L'])
+    @commands.command(name='loop', aliases=['repeat', 'l', 'L'])
     async def _loop(self, ctx: commands.Context):
         """Loops the currently playing song.
 
@@ -459,10 +459,12 @@ class Music(commands.Cog):
         # Inverse boolean value to loop and unloop.
         ctx.voice_state.loop = not ctx.voice_state.loop
         await ctx.message.add_reaction('✅')
-    @commands.command(name='flat?',aliases=['flat','Flat'])
+
+    @commands.command(name='flat?', aliases=['flat', 'Flat'])
     async def winter(self, ctx):
         await ctx.send('I\'m not flat!! >:(')
-    @commands.command(name='play', aliases=['p','start'])
+
+    @commands.command(name='play', aliases=['p', 'start'])
     async def _play(self, ctx: commands.Context, *, search: str):
         """Plays a song.
 
@@ -501,18 +503,19 @@ class Music(commands.Cog):
             if ctx.voice_client.channel != ctx.author.voice.channel:
                 raise commands.CommandError('I\'m somewhere else already!')
 
-bot = commands.Bot(command_prefix=['W.','w.','world.','World.','Wrld.','wrld.'], description='hi! I\'m WorldChan! I play music for people around the world to enjoy ^-^')
+
+bot = commands.Bot(command_prefix=['W.', 'w.', 'world.', 'World.', 'Wrld.', 'wrld.'],
+                   description='hi! I\'m WorldChan! I play music for people around the world to enjoy ^-^')
 bot.add_cog(Music(bot))
 
 
 @bot.event
 async def on_ready():
     print('Logged in as:\n{0.user.name}\n{0.user.id}'.format(bot))
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="songs using w.help!"))
+    await bot.change_presence(
+        activity=discord.Activity(type=discord.ActivityType.listening, name="songs using w.help!"))
     print('Connected to bot: {}'.format(bot.user.name))
     print('Bot ID: {}'.format(bot.user.id))
+
+
 bot.run(os.getenv("TOKEN"))
-
-
-
-
