@@ -317,7 +317,7 @@ class Music(commands.Cog):
 
         ctx.voice_state.voice = await destination.connect()
 
-    @commands.command(name='leave', aliases=['disconnect', 'frickoff', 'dc', ])
+    @commands.command(name='leave', aliases=['disconnect', 'frickoff', 'dc','quit','end' ])
     @commands.has_permissions(manage_guild=True)
     async def _leave(self, ctx: commands.Context):
         """Clears the queue and leaves the voice channel."""
@@ -328,18 +328,18 @@ class Music(commands.Cog):
         await ctx.voice_state.stop()
         del self.voice_states[ctx.guild.id]
 
-    @commands.command(name='volume')
+    @commands.command(name='volume', aliases=['v','Volume','vol','volum'])
     async def _volume(self, ctx: commands.Context, *, volume: int):
         """Sets the volume of the player."""
 
         if not ctx.voice_state.is_playing:
             return await ctx.send('I\'m not singing  at the moment.')
 
-        if 0 > volume > 100:
-            return await ctx.send('Volume must be between 0 and 100 you goof')
-
-        ctx.voice_client.source.volume = volume / 100
-        await ctx.send('Volume of my speakers set to {}%!'.format(volume))
+        if 0 < volume <= 150:
+            ctx.voice_client.source.volume = volume / 150
+            await ctx.send('Volume of my speakers set to {}%!'.format(volume))
+        else: 
+          await ctx.send('Volume must be between 1 and 150!')
 
     @commands.command(name='now', aliases=['current', 'playing', 'np'])
     async def _now(self, ctx: commands.Context):
@@ -505,7 +505,7 @@ class Music(commands.Cog):
 
 
 bot = commands.Bot(command_prefix=['W.', 'w.', 'world.', 'World.', 'Wrld.', 'wrld.'],
-                   description='hi! I\'m WorldChan! I play music for people around the world to enjoy ^-^')
+                   description='hi! I\'m EarthChan! I play music for people around the world to enjoy ^-^')
 bot.add_cog(Music(bot))
 
 
